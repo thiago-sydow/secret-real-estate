@@ -2,6 +2,7 @@ module API
   module V1
     class Properties < Grape::API
       include API::V1::Defaults
+      helpers PropertyHelpers
 
       resource :properties, desc: 'Properties Endpoint' do
         desc 'Return all Properties.'
@@ -22,13 +23,7 @@ module API
           requires :property_type, type: Symbol, values: [:farm, :home, :apartment, :land, :studio], desc: 'The type of the property'
           requires :goal, type: Symbol, values: [:buy, :rent], desc: 'The goal of the property'
           requires :price, type: Float, desc: 'The price of the property'
-          optional :property_info_attributes, type: Hash do
-            optional :bedrooms, type: Integer, desc: 'Number of bedrooms of the property'
-            optional :bathrooms, type: Integer, desc: 'Number of bathrooms of the property'
-            optional :car_spaces, type: Integer, desc: 'Number of car spaces of the property'
-            optional :square_footage, type: String, desc: 'Square footage of the property'
-            at_least_one_of :bedrooms, :bathrooms, :car_spaces, :square_footage
-          end
+          use :property_info
         end
         post '/' do
           authorize Property, :create?
@@ -47,13 +42,7 @@ module API
           optional :property_type, type: Symbol, values: [:farm, :home, :apartment, :land, :studio], desc: 'The type of the property'
           optional :goal, type: Symbol, values: [:buy, :rent], desc: 'The goal of the property'
           optional :price, type: Float, desc: 'The price of the property'
-          optional :property_info_attributes, type: Hash do
-            optional :bedrooms, type: Integer, desc: 'Number of bedrooms of the property'
-            optional :bathrooms, type: Integer, desc: 'Number of bathrooms of the property'
-            optional :car_spaces, type: Integer, desc: 'Number of car spaces of the property'
-            optional :square_footage, type: String, desc: 'Square footage of the property'
-            at_least_one_of :bedrooms, :bathrooms, :car_spaces, :square_footage
-          end
+          use :property_info
           at_least_one_of :name, :property_type, :goal, :price, :property_info_attributes
         end
         put ':id' do
