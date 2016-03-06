@@ -50,7 +50,7 @@ describe API::V1::Properties, type: :request do
     context 'when all required fields are present' do
       let(:property_params) { attributes_for(:property) }
 
-      it 'returns a specific property' do
+      it 'creates the property' do
         post "#{NAMESPACE}/properties", property_params, auth_header(user)
         expect(response).to be_created
       end
@@ -61,7 +61,7 @@ describe API::V1::Properties, type: :request do
 
       before { property_params.delete(:name) }
 
-      it 'returns a specific property' do
+      it 'fails with 400 bad request code' do
         post "#{NAMESPACE}/properties", property_params, auth_header(user)
         expect(response).to be_bad_request
       end
@@ -70,7 +70,7 @@ describe API::V1::Properties, type: :request do
     context 'when an user without permission attempt to create' do
       let(:property_params) { attributes_for(:property) }
 
-      it 'returns a specific property' do
+      it 'fails with 403 forbidden code' do
         post "#{NAMESPACE}/properties", property_params, auth_header(read_only_user)
         expect(response).to be_forbidden
       end
@@ -100,7 +100,7 @@ describe API::V1::Properties, type: :request do
     context 'when an user without permission attempt to update' do
       let(:property_params) { { name: 'New name' } }
 
-      it 'fails with 403 bad request code' do
+      it 'fails with 403 forbidden code' do
         put "#{NAMESPACE}/properties/#{property.id}", property_params, auth_header(read_only_user)
         expect(response).to be_forbidden
       end
@@ -111,8 +111,38 @@ describe API::V1::Properties, type: :request do
       let!(:property2) { create(:property, user: another_user) }
       let(:property_params) { { name: 'New name' } }
 
-      it 'fails with 403 bad request code' do
+      it 'fails with 403 forbidden code' do
         put "#{NAMESPACE}/properties/#{property2.id}", property_params, auth_header(user)
+        expect(response).to be_forbidden
+      end
+    end
+  end
+
+  context "DELETE #{NAMESPACE}/properties/:id" do
+    let!(:property) { create(:property, user: user) }
+
+    context 'when user is allowed to delete' do
+      it 'deletes the property from the system' do
+        delete "#{NAMESPACE}/properties/#{property.id}", nil, auth_header(user)
+        expect(response).to be_ok
+        expect{ property.reload }.to raise_error(ActiveRecord::RecordNotFound)
+      end
+    end
+
+    context 'when an user without permission attempt to update' do
+      it 'fails with 403 forbidden code' do
+        delete "#{NAMESPACE}/properties/#{property.id}", nil, auth_header(read_only_user)
+        expect(response).to be_forbidden
+      end
+    end
+
+    context 'when an user attempts to update another user property' do
+      let!(:another_user) { create(:user_broker) }
+      let!(:property2) { create(:property, user: another_user) }
+      let(:property_params) { { name: 'New name' } }
+
+      it 'fails with 403 forbidden code' do
+        delete "#{NAMESPACE}/properties/#{property2.id}", nil, auth_header(user)
         expect(response).to be_forbidden
       end
     end
