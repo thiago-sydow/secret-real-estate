@@ -11,7 +11,10 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160306144934) do
+ActiveRecord::Schema.define(version: 20160306214325) do
+
+  # These are extensions that must be enabled in order to support this database
+  enable_extension "plpgsql"
 
   create_table "properties", force: :cascade do |t|
     t.integer  "property_type"
@@ -24,7 +27,7 @@ ActiveRecord::Schema.define(version: 20160306144934) do
     t.datetime "updated_at",    null: false
   end
 
-  add_index "properties", ["user_id"], name: "index_properties_on_user_id"
+  add_index "properties", ["user_id"], name: "index_properties_on_user_id", using: :btree
 
   create_table "property_infos", force: :cascade do |t|
     t.integer  "bedrooms"
@@ -36,7 +39,7 @@ ActiveRecord::Schema.define(version: 20160306144934) do
     t.datetime "updated_at",     null: false
   end
 
-  add_index "property_infos", ["property_id"], name: "index_property_infos_on_property_id"
+  add_index "property_infos", ["property_id"], name: "index_property_infos_on_property_id", using: :btree
 
   create_table "users", force: :cascade do |t|
     t.string   "email",                  default: "", null: false
@@ -55,7 +58,20 @@ ActiveRecord::Schema.define(version: 20160306144934) do
     t.string   "name"
   end
 
-  add_index "users", ["email"], name: "index_users_on_email", unique: true
-  add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
+  add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree
+  add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
 
+  create_table "visits", force: :cascade do |t|
+    t.time     "visit_time"
+    t.integer  "visitable_id"
+    t.string   "visitable_type"
+    t.datetime "created_at",     null: false
+    t.datetime "updated_at",     null: false
+  end
+
+  add_index "visits", ["visit_time"], name: "index_visits_on_visit_time", using: :btree
+  add_index "visits", ["visitable_type", "visitable_id"], name: "index_visits_on_visitable_type_and_visitable_id", using: :btree
+
+  add_foreign_key "properties", "users"
+  add_foreign_key "property_infos", "properties"
 end
