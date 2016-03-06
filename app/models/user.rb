@@ -5,6 +5,9 @@ class User < ActiveRecord::Base
          :recoverable, :rememberable, :trackable, :validatable
 
   enum role: [:admin, :broker, :guest]
+
+  validates_presence_of :name, :role
+
   after_initialize :set_default_role, if: :new_record?
 
   def set_default_role
