@@ -11,7 +11,32 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160306140642) do
+ActiveRecord::Schema.define(version: 20160306144934) do
+
+  create_table "properties", force: :cascade do |t|
+    t.integer  "property_type"
+    t.string   "name"
+    t.integer  "goal"
+    t.text     "description"
+    t.float    "price"
+    t.integer  "user_id"
+    t.datetime "created_at",    null: false
+    t.datetime "updated_at",    null: false
+  end
+
+  add_index "properties", ["user_id"], name: "index_properties_on_user_id"
+
+  create_table "property_infos", force: :cascade do |t|
+    t.integer  "bedrooms"
+    t.integer  "bathrooms"
+    t.integer  "car_spaces"
+    t.string   "square_footage"
+    t.integer  "property_id"
+    t.datetime "created_at",     null: false
+    t.datetime "updated_at",     null: false
+  end
+
+  add_index "property_infos", ["property_id"], name: "index_property_infos_on_property_id"
 
   create_table "users", force: :cascade do |t|
     t.string   "email",                  default: "", null: false
