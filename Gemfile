@@ -33,5 +33,5 @@ end
 group :test do
   gem 'shoulda-matchers'
   gem 'simplecov', require: false
-  gem 'turnip'
+  gem 'pundit-matchers', '~> 1.0.1'
 end
