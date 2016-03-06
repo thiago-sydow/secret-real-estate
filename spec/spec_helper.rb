@@ -1,3 +1,6 @@
+require "codeclimate-test-reporter"
+CodeClimate::TestReporter.start
+
 require 'pundit/matchers'
 
 RSpec.configure do |config|

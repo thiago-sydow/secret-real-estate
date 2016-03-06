@@ -19,7 +19,7 @@ FactoryGirl.define do
     password_confirmation 'password'
     name 'Example User'
 
-    #Default user role is broker
+    #Default user role is guest
     guest
 
     factory :user_admin, traits: [:admin]
