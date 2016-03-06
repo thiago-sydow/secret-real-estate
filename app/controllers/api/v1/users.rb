@@ -4,6 +4,11 @@ module API
       include API::V1::Defaults
 
       resource :users, desc: 'Users Endpoint' do
+        desc 'Return the most popular users.'
+        get '/most-popular' do
+          User.most_viewed
+        end
+
         desc 'Return all Users.'
         get '/' do
           User.all
@@ -11,7 +16,9 @@ module API
 
         desc 'Return the specified user if exists.'
         get ':id' do
-          User.find(params[:id])
+          user = User.find(params[:id])
+          user.visits.create!({visit_time: Time.current})
+          user
         end
 
         desc 'Create User.' do
