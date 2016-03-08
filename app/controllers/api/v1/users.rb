@@ -6,19 +6,19 @@ module API
       resource :users, desc: 'Users Endpoint' do
         desc 'Return the most popular users.'
         get '/most-popular' do
-          User.most_viewed
+          present User.most_viewed, with: API::V1::Entities::User
         end
 
         desc 'Return all Users.'
         get '/' do
-          User.all
+          present User.all, with: API::V1::Entities::User
         end
 
         desc 'Return the specified user if exists.'
         get ':id' do
           user = User.find(params[:id])
           user.visits.create!({visit_time: Time.current})
-          user
+          present user, with: API::V1::Entities::User
         end
 
         desc 'Create User.' do

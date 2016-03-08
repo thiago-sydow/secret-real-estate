@@ -7,19 +7,19 @@ module API
       resource :properties, desc: 'Properties Endpoint' do
         desc 'Return the most Viewed Properties.'
         get '/most-viewed' do
-          Property.most_viewed
+          present Property.most_viewed, with: API::V1::Entities::Property
         end
 
         desc 'Return all Properties.'
         get '/' do
-          Property.all
+          present Property.all, with: API::V1::Entities::Property
         end
 
         desc 'Return the specified property if exists.'
         get ':id' do
           property = Property.find(params[:id])
           property.visits.create!({visit_time: Time.current})
-          property
+          present property, with: API::V1::Entities::Property
         end
 
         desc 'Create Property.' do
