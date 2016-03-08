@@ -34,7 +34,7 @@ You can see the live documentation at `http://localhost:3000/swagger`
 User and password for access it can be found in `db/seeds.rb`
 
 The application is automatically deployed to Heroku when Pull Request is merged on master branch, and CI passes.
-You can also see it live on here `secret-real-estate.herokuapp.com`. Users are the same.
+You can also see it live on here `https://secret-real-estate.herokuapp.com/swagger`. Users are the same.
 
 I took the challenge to test the gem Grape, who had long wanted to use to build an API. It is not perfect but I liked the result and had fun learning how to use it.
 
