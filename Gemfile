@@ -11,6 +11,7 @@ gem 'sdoc', '~> 0.4.0', group: :doc
 gem 'devise'
 gem 'grape'
 gem 'grape-swagger-rails'
+gem 'grape-entity'
 gem 'pundit'
 
 group :production do

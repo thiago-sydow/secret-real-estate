@@ -10,14 +10,16 @@ module API
         eclass = e.class.to_s
 
         status = case
-          when eclass.match('RecordNotFound'), e.message.match(/unable to find/i).present?
-            404
-          when eclass.match('Pundit::NotAuthorizedError')
-            opts = { error: "You have insuficient permissions." }
-            403
-          else
-            (e.respond_to? :status) && e.status || 500
-          end
+                 when eclass.match('RecordNotFound'), e.message.match(/unable to find/i).present?
+                   404
+                 when eclass.match('RecordInvalid'), e.message.match(/Validation failed/i).present?
+                   400
+                 when eclass.match('Pundit::NotAuthorizedError')
+                   opts = { error: "You have insuficient permissions." }
+                   403
+                 else
+                   (e.respond_to? :status) && e.status || 500
+                 end
 
         opts ||= { error: "#{e.message}" }
         opts[:trace] = e.backtrace[0,10] unless Rails.env.production?

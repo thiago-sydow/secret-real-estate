@@ -5,24 +5,31 @@ module API
       helpers PropertyHelpers
 
       resource :properties, desc: 'Properties Endpoint' do
+        desc 'Return the most Viewed Properties.'
+        get '/most-viewed' do
+          present Property.most_viewed, with: API::V1::Entities::Property
+        end
+
         desc 'Return all Properties.'
         get '/' do
-          Property.all
+          present Property.all, with: API::V1::Entities::Property
         end
 
         desc 'Return the specified property if exists.'
         get ':id' do
-          Property.find(params[:id])
+          property = Property.find(params[:id])
+          property.visits.create!({visit_time: Time.current})
+          present property, with: API::V1::Entities::Property
         end
 
         desc 'Create Property.' do
           detail 'Create a new Property in the system. Note that your role must be broker or admin'
         end
         params do
-          requires :name, type: String, desc: 'The name of the property'
-          requires :property_type, type: Symbol, values: [:farm, :home, :apartment, :land, :studio], desc: 'The type of the property'
-          requires :goal, type: Symbol, values: [:buy, :rent], desc: 'The goal of the property'
-          requires :price, type: Float, desc: 'The price of the property'
+          requires :name, type: String, allow_blank: false, desc: 'The name of the property'
+          requires :property_type, type: Symbol, allow_blank: false, values: [:farm, :home, :apartment, :land, :studio], desc: 'The type of the property'
+          requires :goal, type: Symbol, allow_blank: false, values: [:buy, :rent], desc: 'The goal of the property'
+          requires :price, type: Float, allow_blank: false, desc: 'The price of the property'
           use :property_info
         end
         post '/' do
@@ -38,10 +45,10 @@ module API
           'If you are a broker, you can only edit your own inserted Properties'
         end
         params do
-          optional :name, type: String, desc: 'The name of the property'
-          optional :property_type, type: Symbol, values: [:farm, :home, :apartment, :land, :studio], desc: 'The type of the property'
-          optional :goal, type: Symbol, values: [:buy, :rent], desc: 'The goal of the property'
-          optional :price, type: Float, desc: 'The price of the property'
+          optional :name, type: String, allow_blank: false, desc: 'The name of the property'
+          optional :property_type, type: Symbol, allow_blank: false, values: [:farm, :home, :apartment, :land, :studio], desc: 'The type of the property'
+          optional :goal, type: Symbol, allow_blank: false, values: [:buy, :rent], desc: 'The goal of the property'
+          optional :price, type: Float, allow_blank: false, desc: 'The price of the property'
           use :property_info
           at_least_one_of :name, :property_type, :goal, :price, :property_info_attributes
         end

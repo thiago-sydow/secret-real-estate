@@ -14,7 +14,7 @@ describe API::V1::Properties, type: :request do
       it 'returns an array with all properties' do
         get "#{NAMESPACE}/properties", nil, auth_header(user)
         expect(response).to be_ok
-        expect(JSON.parse(response.body).size).to eq 2
+        expect(JSON.parse(response.body)['properties'].size).to eq 2
       end
     end
 
@@ -22,7 +22,7 @@ describe API::V1::Properties, type: :request do
       it 'returns an empty json array' do
         get "#{NAMESPACE}/properties", nil, auth_header(user)
         expect(response).to be_ok
-        expect(JSON.parse(response.body)).to be_empty
+        expect(JSON.parse(response.body)['properties']).to be_empty
       end
     end
   end
@@ -34,7 +34,7 @@ describe API::V1::Properties, type: :request do
       it 'returns a specific property' do
         get "#{NAMESPACE}/properties/#{property.id}", nil, auth_header(user)
         expect(response).to be_ok
-        expect(JSON.parse(response.body)['id']).to eq(property.id)
+        expect(JSON.parse(response.body)['property']['id']).to eq(property.id)
       end
     end
 

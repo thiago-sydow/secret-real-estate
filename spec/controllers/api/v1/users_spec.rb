@@ -11,7 +11,7 @@ describe API::V1::Users, type: :request do
     it 'returns an array with all users' do
       get "#{NAMESPACE}/users", nil, auth_header(user)
       expect(response).to be_ok
-      expect(JSON.parse(response.body).size).to eq 3
+      expect(JSON.parse(response.body)['users'].size).to eq 3
     end
   end
 
@@ -20,7 +20,7 @@ describe API::V1::Users, type: :request do
       it 'returns a specific user' do
         get "#{NAMESPACE}/users/#{user.id}", nil, auth_header(user)
         expect(response).to be_ok
-        expect(JSON.parse(response.body)['id']).to eq(user.id)
+        expect(JSON.parse(response.body)['user']['id']).to eq(user.id)
       end
     end
 
