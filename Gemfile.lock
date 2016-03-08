@@ -251,6 +251,7 @@ DEPENDENCIES
   devise
   factory_girl_rails
   grape
+  grape-entity
   grape-swagger-rails
   mailcatcher
   pg
