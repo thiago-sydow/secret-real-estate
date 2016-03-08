@@ -30,6 +30,7 @@ module API
           requires :property_type, type: Symbol, allow_blank: false, values: [:farm, :home, :apartment, :land, :studio], desc: 'The type of the property'
           requires :goal, type: Symbol, allow_blank: false, values: [:buy, :rent], desc: 'The goal of the property'
           requires :price, type: Float, allow_blank: false, desc: 'The price of the property'
+          optional :description, type: String, desc: 'Description of the Property'
           use :property_info
         end
         post '/' do
@@ -49,8 +50,9 @@ module API
           optional :property_type, type: Symbol, allow_blank: false, values: [:farm, :home, :apartment, :land, :studio], desc: 'The type of the property'
           optional :goal, type: Symbol, allow_blank: false, values: [:buy, :rent], desc: 'The goal of the property'
           optional :price, type: Float, allow_blank: false, desc: 'The price of the property'
+          optional :description, type: String, allow_blank: false, desc: 'Description of the Property'
           use :property_info
-          at_least_one_of :name, :property_type, :goal, :price, :property_info_attributes
+          at_least_one_of :name, :property_type, :goal, :price, :property_info_attributes, :description
         end
         put ':id' do
           property = Property.find(params[:id])
